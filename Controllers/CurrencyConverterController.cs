@@ -33,8 +33,7 @@ namespace Currency_Conv_Test.Controllers
 
         [HttpGet]
         [Route("{code?}")]
-        // localhost / currencyConverter / currency code
-        public ContentResult Single(string code)
+        public ContentResult GetCurrentRateForCode(string code)
         {
             var result = CurrenciesService.GetCurrentRateForCurrency(code.ToUpper());
 
