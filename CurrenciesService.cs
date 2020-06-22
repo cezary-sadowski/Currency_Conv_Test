@@ -10,12 +10,11 @@ namespace Currency_Conv_Test
 {
     public static class CurrenciesService
     {
-        public static async Task<string> GetCurrencies()
+        private static readonly string currenciesList = "http://api.nbp.pl/api/exchangerates/tables/a/";
+        public static async Task<string> GetCurrenciesFromAPI()
         {
             var httpClient = HttpClientFactory.Create();
-
-            var url = "http://api.nbp.pl/api/exchangerates/tables/a/";
-            HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(url);
+            HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(currenciesList);
 
             if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
@@ -27,22 +26,33 @@ namespace Currency_Conv_Test
             return httpResponseMessage.StatusCode.ToString();
         }
 
-        public static string GetAvailableCurrencies()
+        public static Rate[] GetAvailableCurrenciesFromJson()
         {
-            var data = CurrenciesService.GetCurrencies().Result;
+            var data = CurrenciesService.GetCurrenciesFromAPI().Result;
             var currencies = JsonConvert.DeserializeObject<IEnumerable<Currencies>>(data);
 
             var tableA = currencies.First();
-            var rates = tableA.Rates;
+            return tableA.Rates;
+        }
 
+        public static string GetListOfCurrenciesWithCode()
+        {
+            var rates = GetAvailableCurrenciesFromJson();
             var availableCurrencies = new List<string>();
 
             foreach (var rate in rates)
             {
-                availableCurrencies.Add($"{rate.Currency}, code: {rate.Code}, mid: {rate.Mid}");
+                availableCurrencies.Add($"{rate.Currency}, Currency Code: <b>{rate.Code}</b>");
             }
 
             return String.Join("</br>", availableCurrencies.ToArray());
+        }
+
+        public static string GetCurrentRateForCurrency(string code)
+        {
+            var rates = GetAvailableCurrenciesFromJson().ToDictionary(k => k.Code, v => v.Mid);
+
+            return rates.SingleOrDefault(k => k.Key.Equals(code)).Value.ToString();
         }
     }
 }

@@ -27,10 +27,24 @@ namespace Currency_Conv_Test.Controllers
             return new ContentResult
             {
                 ContentType = "text/html; charset=utf-8",
-                Content = CurrenciesService.GetAvailableCurrencies()
+                Content = CurrenciesService.GetListOfCurrenciesWithCode()
             };
         }
 
-        
+        [HttpGet]
+        [Route("{code?}")]
+        // localhost / currencyConverter / currency code
+        public ContentResult Single(string code)
+        {
+            var result = CurrenciesService.GetCurrentRateForCurrency(code.ToUpper());
+
+            return new ContentResult
+            {
+                ContentType = "text/html; charset=utf-8",
+                Content = $"Current rate for currency <b>{code.ToUpper()}</b> is <b>{result}</b>"
+            };
+        }
+
+
     }
 }
