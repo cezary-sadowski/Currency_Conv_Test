@@ -40,7 +40,7 @@ namespace Currency_Conv_Test.Controllers
             return new ContentResult
             {
                 ContentType = "text/html; charset=utf-8",
-                Content = $"Current rate for currency <b>{code.ToUpper()}</b> is <b>{result}</b>"
+                Content = $"Current rate for currency <b>{ code.ToUpper() }</b> is <b>{ result }</b>"
             };
         }
 
@@ -53,10 +53,8 @@ namespace Currency_Conv_Test.Controllers
             return new ContentResult
             {
                 ContentType = "text/html; charset=utf-8",
-                Content = $"{result}"
+                Content = $"{value} <b>{fromCode}</b> is {result} <b>{toCode}</b>"
             };
         }
-
-
     }
 }
