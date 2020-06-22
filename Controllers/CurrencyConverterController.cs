@@ -32,7 +32,7 @@ namespace Currency_Conv_Test.Controllers
         }
 
         [HttpGet]
-        [Route("{code?}")]
+        [Route("{code}")]
         public ContentResult GetCurrentRateForCode(string code)
         {
             var result = CurrenciesService.GetCurrentRateForCurrency(code.ToUpper());
@@ -41,6 +41,19 @@ namespace Currency_Conv_Test.Controllers
             {
                 ContentType = "text/html; charset=utf-8",
                 Content = $"Current rate for currency <b>{code.ToUpper()}</b> is <b>{result}</b>"
+            };
+        }
+
+        [HttpGet]
+        [Route("{value}/{fromCode}/{toCode}")]
+        public ContentResult CalculateRates(decimal value, string fromCode, string toCode)
+        {
+            var result = CurrenciesService.CalculateRateBetweenCurrencies(value, fromCode.ToUpper(), toCode.ToUpper());
+
+            return new ContentResult
+            {
+                ContentType = "text/html; charset=utf-8",
+                Content = $"{result}"
             };
         }
 

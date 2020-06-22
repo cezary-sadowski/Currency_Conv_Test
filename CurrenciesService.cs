@@ -54,5 +54,15 @@ namespace Currency_Conv_Test
 
             return rates.SingleOrDefault(k => k.Key.Equals(code)).Value.ToString();
         }
+
+        public static string CalculateRateBetweenCurrencies(decimal value, string fromCode, string toCode)
+        {
+            var rates = GetAvailableCurrenciesFromJson().ToDictionary(k => k.Code, v => v.Mid);
+
+            var fromCode_rate = rates.SingleOrDefault(k => k.Key.Equals(fromCode)).Value;
+            var toCode_rate = rates.SingleOrDefault(k => k.Key.Equals(toCode)).Value;
+
+            return String.Format("{0:0.0000}", value * fromCode_rate/toCode_rate);
+        }
     }
 }

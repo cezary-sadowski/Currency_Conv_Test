@@ -27,6 +27,6 @@ namespace Currency_Conv_Test
         public string Code { get; set; }
 
         [JsonProperty("mid")]
-        public double Mid { get; set; }
+        public decimal Mid { get; set; }
     }
 }
