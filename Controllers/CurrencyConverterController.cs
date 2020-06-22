@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Currency_Conv_Test.Controllers
 {
@@ -7,16 +8,24 @@ namespace Currency_Conv_Test.Controllers
     [Route("[controller]")]
     public class CurrencyConverterController : ControllerBase
     {
-        private readonly ILogger<CurrencyConverterController> _logger;
+        private readonly DBConnection _dbConnection;
 
-        public CurrencyConverterController(ILogger<CurrencyConverterController> logger)
+        public CurrencyConverterController(DBConnection dbConnection)
         {
-            _logger = logger;
+            _dbConnection = dbConnection;
         }
 
         [HttpGet]
         public ContentResult Get()
         {
+            var request = new Requests()
+            {
+                Date = DateTime.Now,
+                Name = nameof(CurrenciesService.GetListOfCurrenciesWithCode)
+            };
+            _dbConnection.Requests.Add(request);
+            _dbConnection.SaveChanges();
+
             return new ContentResult
             {
                 ContentType = "text/html; charset=utf-8",
@@ -30,6 +39,14 @@ namespace Currency_Conv_Test.Controllers
         {
             var result = CurrenciesService.GetCurrentRateForCurrency(code.ToUpper());
 
+            var request = new Requests()
+            {
+                Date = DateTime.Now,
+                Name = nameof(CurrenciesService.GetCurrentRateForCurrency)
+            };
+            _dbConnection.Requests.Add(request);
+            _dbConnection.SaveChanges();
+
             return new ContentResult
             {
                 ContentType = "text/html; charset=utf-8",
@@ -42,6 +59,14 @@ namespace Currency_Conv_Test.Controllers
         public ContentResult CalculateRates(decimal value, string fromCode, string toCode)
         {
             var result = CurrenciesService.CalculateRateBetweenCurrencies(value, fromCode.ToUpper(), toCode.ToUpper());
+
+            var request = new Requests()
+            {
+                Date = DateTime.Now,
+                Name = nameof(CurrenciesService.CalculateRateBetweenCurrencies)
+            };
+            _dbConnection.Requests.Add(request);
+            _dbConnection.SaveChanges();
 
             return new ContentResult
             {
