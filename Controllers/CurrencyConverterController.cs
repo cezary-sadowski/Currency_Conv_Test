@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -38,12 +39,28 @@ namespace Currency_Conv_Test.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CurrencyConverter> Get()
+        public ContentResult Get()
         {
-            var data = GetCurrencies();
-            IEnumerable<CurrencyConverter> jsonArray = JsonConvert.DeserializeObject<IEnumerable<CurrencyConverter>>(data.Result);
+            var data = GetCurrencies().Result;
+            var currencies = JsonConvert.DeserializeObject<IEnumerable<CurrencyConverter>>(data);
 
-            return jsonArray;
+            var tableA = currencies.First();
+            var rates = tableA.Rates;
+
+            var availableCurrencies = new List<string>();
+
+            foreach(var rate in rates)
+            {
+                availableCurrencies.Add($"{rate.Currency}, code: {rate.Code}, mid: {rate.Mid}");
+            }
+
+            var result = String.Join("</br>", availableCurrencies.Take(5).ToArray());
+
+            return new ContentResult
+            {
+                ContentType = "text/html; charset=utf-8",
+                Content = result,
+            };
         }
 
         
