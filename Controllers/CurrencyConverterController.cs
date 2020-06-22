@@ -42,7 +42,7 @@ namespace Currency_Conv_Test.Controllers
         public ContentResult Get()
         {
             var data = GetCurrencies().Result;
-            var currencies = JsonConvert.DeserializeObject<IEnumerable<CurrencyConverter>>(data);
+            var currencies = JsonConvert.DeserializeObject<IEnumerable<Currencies>>(data);
 
             var tableA = currencies.First();
             var rates = tableA.Rates;

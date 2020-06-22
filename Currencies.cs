@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Currency_Conv_Test
 {
-    public partial class CurrencyConverter
+    public partial class Currencies
     {
         [JsonProperty("table")]
         public string Table { get; set; }
